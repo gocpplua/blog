@@ -7,4 +7,6 @@ My personal blog information --- www.gocpplua.com
 
 > 20190203[《C++11为什么需要std::ref/reference_wrapper》](http://www.gocpplua.com/index.php/archives/29.html)
 
-> 201902013[《typecho加友情链接》](http://www.gocpplua.com/index.php/archives/40.html)
+> 20190213[《typecho加友情链接》](http://www.gocpplua.com/index.php/archives/40.html)
+
+> 20190216[《使用mongoose实现restful server》](http://www.gocpplua.com/index.php/archives/47.html)
