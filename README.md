@@ -10,3 +10,5 @@ My personal blog information --- www.gocpplua.com
 > 20190213[《typecho加友情链接》](http://www.gocpplua.com/index.php/archives/40.html)
 
 > 20190216[《使用mongoose实现restful server》](http://www.gocpplua.com/index.php/archives/47.html)
+
+> 20190216[《创建internet快捷方式》](http://www.gocpplua.com/index.php/archives/57.html)
