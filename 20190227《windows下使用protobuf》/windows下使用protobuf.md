@@ -48,4 +48,6 @@ b、关于多线程的内存分配器
 
 [《protobuf详细的安装和使用（windows cpp）》  ](https://blog.csdn.net/program_anywhere/article/details/77365876)-- 有cmake，写的不错
 
+[《ProtoBuf如何在c++中使用》](https://blog.csdn.net/qq_15267341/article/details/80107293) -- 生成protobuf库以后，新建工程使用库
+
 [cmake下载](https://github.com/Kitware/CMake/releases/download/v3.13.4/cmake-3.13.4-win64-x64.msi)
