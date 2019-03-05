@@ -21,6 +21,8 @@ protoc -I=$SRC_DIR --cpp_out=$DST_DIR $SRC_DIR/XXXX.proto，
 例如：protoc student.proto --cpp_out=./，会生成下述文件：
 student.pb.h：声明你生成的类的头文件。
 student.pb.cc：你生成的类的实现文件。
+例如:protoc.exe student.proto -o student.pb
+student.pb :生成pb文件，lua可以进行解析
 
 
 

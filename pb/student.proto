@@ -1,7 +1,0 @@
-syntax = "proto3";
-package tutorial;
-
-message Student{
-    uint64 id = 1;
-    string name =2;
-}
