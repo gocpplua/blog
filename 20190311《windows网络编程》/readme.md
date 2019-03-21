@@ -17,9 +17,9 @@ https://blog.csdn.net/piggyxp/article/category/302220
 
 [《Beej's Guide to Network Programming 简体中文版》](http://beej-zhcn.netdpi.net/news)
 
-
+[VC驿站《WinSock 异步I/O模型》VC++网络编程](https://www.bilibili.com/video/av38555831)
+[《c++高性能服务器网络编程(陈硕)》](https://www.bilibili.com/video/av40870266/)
 学习步骤1:
 
 [《自制 windows网络编程》](https://www.bilibili.com/video/av3906340/)    配合书籍《windows 网络编程(第二版)》
 
-[《c++高性能服务器网络编程(陈硕)》](https://www.bilibili.com/video/av40870266/)
