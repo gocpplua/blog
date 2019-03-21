@@ -19,4 +19,7 @@ https://blog.csdn.net/piggyxp/article/category/302220
 
 
 学习步骤1:
-[《自制 windows网络编程》](https://www.bilibili.com/video/av3906340/)
+
+[《自制 windows网络编程》](https://www.bilibili.com/video/av3906340/)    配合书籍《windows 网络编程(第二版)》
+
+[《c++高性能服务器网络编程(陈硕)》](https://www.bilibili.com/video/av40870266/)
