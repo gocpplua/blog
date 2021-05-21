@@ -1,4 +1,4 @@
-# 【Pomelo】服务器启动流程
+# 【Pomelo】pomelo start 启动流程
 
 我们执行: pomelo start，然后服务器启动。
 
@@ -86,6 +86,31 @@ process.on('uncaughtException', function (err) {
   console.error(' Caught exception: ' + err.stack);
 });
 ```
+
+在`'start()'函数中，使用`child\_process._spawn_\(\) 　异步生成子进程。
+
+其中参数`process.execPath,` 是 Node.js 进程的可执行文件的绝对路径。
+
+我修改了pemelo源码，将参数打印出来:
+
+```text
+$ pomelo start
+undefined
+[
+  '/data/XXX/pomelo/pomelo_prj/HelloWorld/game-server/app.js',
+  'env=development',
+  'type=all'
+]
+
+```
+
+所以pomelo　start 其实就是执行:
+
+```text
+>$ node /data/gocpplua/pomelo/pomelo_prj/HelloWorld/game-server/app.js env=development type=all
+```
+
+
 
 接下来的细节就不在这边展开了。
 
