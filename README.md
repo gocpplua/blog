@@ -1,6 +1,2 @@
----
-description: 'https://docs.colyseus.io/'
----
-
-# Colyseus
+# Initial page
 
