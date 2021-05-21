@@ -56,5 +56,33 @@ function start(opts) {
 
 所以，最后启动的是app.js。
 
+```text
+var pomelo = require('pomelo');
+
+/**
+ * Init app for client.
+ */
+var app = pomelo.createApp();
+app.set('name', '$');
+
+// app configuration
+app.configure('production|development', 'connector', function(){
+  app.set('connectorConfig',
+    {
+      connector : pomelo.connectors.hybridconnector, // 设置连接器
+      heartbeat : 3,
+      useDict : true,
+      useProtobuf : true
+    });
+});
+
+// start app
+app.start();
+
+process.on('uncaughtException', function (err) {
+  console.error(' Caught exception: ' + err.stack);
+});
+```
+
 接下来的细节就不在这边展开了。
 
