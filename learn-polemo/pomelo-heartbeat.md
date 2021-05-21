@@ -21,7 +21,7 @@ var handleHeartbeat = function(socket, pkg) {
 };
 ```
 
-默认情况下客户端每个３秒中发送一个心跳，服务器进入'message'事件回调:
+默认情况下客户端每个３秒中发送一个心跳\(在app.js中设置\)，服务器进入'message'事件回调:
 
 ```text
   // lib/connectors/hybridsocket.js
