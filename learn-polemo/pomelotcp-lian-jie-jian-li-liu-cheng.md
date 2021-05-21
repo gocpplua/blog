@@ -362,7 +362,7 @@ Command.prototype.handle = function(socket, msg) {
 };
 ```
 
-最后在上述函数中调用`'respond',回复客户端:`
+最后在上述函数中调用`'respond':`
 
 ```text
 // pomelo/lib/connectors/commands/handshake.js
@@ -377,4 +377,20 @@ var response = function(socket, sys, resp) {
   socket.handshakeResponse(Package.encode(Package.TYPE_HANDSHAKE, new Buffer(JSON.stringify(res))));
 };
 ```
+
+handshakeResponse　实现:
+
+```text
+// pomelo/lib/connectors/hybridsocket.js
+Socket.prototype.handshakeResponse = function(resp) {
+  if(this.state !== ST_INITED) {
+    return;
+  }
+
+  this.socket.send(resp, {binary: true});
+  this.state = ST_WAIT_ACK;
+};
+```
+
+Good Job！！　从建立TCP到收发数据，搞定！！
 
