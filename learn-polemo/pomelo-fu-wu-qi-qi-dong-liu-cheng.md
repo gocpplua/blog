@@ -71,7 +71,7 @@ app.configure('production|development', 'connector', function(){
     {
       connector : pomelo.connectors.hybridconnector, // 设置连接器
       heartbeat : 3,
-      useDict : true,
+      useDict : true, // 用户指令:dictionary.json 文件进行配置
       useProtobuf : true
     });
 });
