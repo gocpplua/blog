@@ -52,7 +52,7 @@ function onconnection(err, clientHandle) {
 var Switcher = function(server, opts) {
   ...
   if (!opts.ssl) {
-    this.server.on('connection', this.newSocket.bind(this));
+    this.server.on('connection', this.newSocket.bind(this));　// 这里监听到的
   } else {
     this.server.on('secureConnection', this.newSocket.bind(this));
     this.server.on('clientError', function(e, tlsSo) {
