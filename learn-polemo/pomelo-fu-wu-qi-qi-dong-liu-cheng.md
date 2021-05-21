@@ -20,6 +20,7 @@ program.command('start')
 看到如果输入start,最后会执行start\(ops\):
 
 ```text
+// pomelo/bin/pomelo
 function start(opts) {
   var absScript = path.resolve(opts.directory, 'app.js');
   if (!fs.existsSync(absScript)) {
@@ -37,6 +38,8 @@ function start(opts) {
   if(!!opts.id) {
     params.push('startId=' + opts.id);
   }
+  
+  //　spawn　创建子进程
   if (opts.daemon) {
     ls = spawn(process.execPath, params, {detached: true, stdio: 'ignore'});
     ls.unref();
