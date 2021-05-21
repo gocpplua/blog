@@ -91,7 +91,19 @@ var Switcher = function(server, opts) {
     at processTicksAndRejections (internal/process/task_queues.js:75:11)
 ```
 
-这里我就不展开了，有兴趣想要深入了解的小伙伴可以自己去调试下。
+这里我就不展开了，有兴趣想要深入了解的小伙伴可以自己去调试下。上面为什么会跑到hybridconnector.js去，是因为我们app.js如下:
+
+```text
+app.configure('production|development', 'connector', function(){
+  app.set('connectorConfig',
+    {
+      connector : pomelo.connectors.hybridconnector, // !!! 就是这个
+      heartbeat : 3,
+      useDict : true,
+      useProtobuf : true
+    });
+});
+```
 
 
 
