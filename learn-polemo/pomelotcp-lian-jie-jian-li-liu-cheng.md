@@ -91,6 +91,25 @@ var Switcher = function(server, opts) {
     at processTicksAndRejections (internal/process/task_queues.js:75:11)
 ```
 
+从而我们可以看到构造函数入参中的`'server',实际上是:`
+
+```text
+Connector.prototype.start = function(cb) {
+ ...
+  if(!this.ssl) {
+    this.listeningServer = net.createServer(); // 非ssl情况下
+  } else {
+    this.listeningServer = tls.createServer(this.ssl); // ssl情况下
+  }
+  this.switcher = new Switcher(this.listeningServer, self.opts);
+
+  this.switcher.on('connection', function(socket) {
+    gensocket(socket);
+  });
+...
+};
+```
+
 这里我就不展开了，有兴趣想要深入了解的小伙伴可以自己去调试下。上面为什么会跑到hybridconnector.js去，是因为我们app.js如下:
 
 ```text
