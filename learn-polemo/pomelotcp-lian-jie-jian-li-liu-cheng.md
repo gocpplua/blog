@@ -161,10 +161,6 @@ Processor.prototype.add = function(socket, data) {
 
 #### 第一步：发送`'connection'事件`
 
-#### \`\`
-
-#### `被Switcher监听到:`
-
 `被Switcher监听:`
 
 ```text
