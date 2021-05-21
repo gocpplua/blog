@@ -14,7 +14,7 @@ pomelo提供了hybirdconnector和sioconnector，hybirdconnector支持TCP、WebSo
 $> polemo start
 ```
 
-启动日志中我们主要关注clientPort:
+启动日志中我们主要关注clientPort和port，其中clientPort是用来监听客户端的连接，port端口用来给后端提供服务。
 
 > \[2021-05-20 20:30:02.478\] \[INFO\] pomelo - \[/data/gocpplua/pomelo/pomelo\_prj/HelloWorld/game-server/node\_modules/pomelo/lib/master/starter.js\] Executing /home/SENSETIME/chenqi1/.nvm/versions/node/v14.16.1/bin/node --inspect=127.0.0.1:16772,/data/gocpplua/pomelo/pomelo\_prj/HelloWorld/game-server/app.js,env=development,id=connector-server-1,host=127.0.0.1,port=3150,clientHost=127.0.0.1,`clientPort=3010`,frontend=true,args= --inspect=127.0.0.1:16772,serverType=connector locally
 
