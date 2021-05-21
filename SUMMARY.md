@@ -9,4 +9,6 @@
 * [Pomelo　tcp 连接测试](learn-polemo/pomelotcp-lian-jie-ce-shi.md)
 * [Pomelo Connector](learn-polemo/pomelo-connector.md)
 * [Pomelo Heartbeat](learn-polemo/pomelo-heartbeat.md)
+* [【Pomelo】服务器启动流程](learn-polemo/pomelo-fu-wu-qi-qi-dong-liu-cheng.md)
+* [【Pomelo】tcp 连接建立流程](learn-polemo/pomelotcp-lian-jie-jian-li-liu-cheng.md)
 
