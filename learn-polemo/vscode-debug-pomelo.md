@@ -110,5 +110,7 @@ vscode的Debug选项选择为:Attach后，按下F5。连接上后可以在VS中�
 
 `Good Job!!!`
 
+> 还有一种方法是:在vscode中创建一个launch.json，然后将program指定为app.js即可。
+
 \`\`
 
