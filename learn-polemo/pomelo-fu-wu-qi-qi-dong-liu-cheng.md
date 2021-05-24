@@ -87,7 +87,7 @@ process.on('uncaughtException', function (err) {
 });
 ```
 
-在`'start()'函数中，使用`child\_process._spawn_\(\) 　异步生成子进程。
+在pomelo的`'start()'函数中，使用`child\_process._spawn_\(\) 　异步生成子进程。
 
 其中参数`process.execPath,` 是 Node.js 进程的可执行文件的绝对路径。
 
