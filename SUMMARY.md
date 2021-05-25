@@ -11,5 +11,5 @@
 * [Pomelo Heartbeat](learn-polemo/pomelo-heartbeat.md)
 * [【Pomelo】pomelo start 启动流程](learn-polemo/pomelo-fu-wu-qi-qi-dong-liu-cheng.md)
 * [【Pomelo】tcp 连接建立和数据发送流程](learn-polemo/pomelotcp-lian-jie-jian-li-liu-cheng.md)
-* [\[pomelo\]chat](learn-polemo/pomelo-chat.md)
+* [【Pomelo】chat](learn-polemo/pomelo-chat.md)
 

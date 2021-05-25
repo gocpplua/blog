@@ -2,7 +2,7 @@
 description: 'Chat源码下载与安装:'
 ---
 
-# \[pomelo\]chat
+# 【Pomelo】chat
 
 [\[官方\]Chat源码下载与安装](https://github.com/NetEase/pomelo/wiki/chat%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD%E4%B8%8E%E5%AE%89%E8%A3%85)
 
@@ -249,5 +249,243 @@ master-server-1    master     31380 44.75  12.40        11.20       3.50
   }
 }
 
+```
+
+
+
+接着启动web-server，然后打开浏览器，输入`http://127.0.0.1:3001/index.html`, 输入一个用户名和一个房间名，点击　Join按钮。
+
+首先在下述代码中收到消息:
+
+```text
+// pomelo/lib/connectors/hybrid/switcher.js
+socket.once('data', function(data) {
+    // FIXME: handle incomplete HTTP method
+    if(isHttp(data)) {
+      processHttp(self, self.wsprocessor, socket, data);
+    } else {
+      if(!!self.setNoDelay) {
+        socket.setNoDelay(true);
+      }
+      processTcp(self, self.tcpprocessor, socket, data);
+    }
+  });
+```
+
+收到'connection'消息，然后到:
+
+```text
+  // pomelo/lib/connectors/hybridconnector.js
+  this.switcher.on('connection', function(socket) {
+    gensocket(socket);
+  });
+```
+
+在gensocket中，设置了id,并且发送'connection'事件:
+
+```text
+    // pomelo/lib/connectors/hybridconnector.js
+  var gensocket = function(socket) {
+    var hybridsocket = new HybridSocket(curId++, socket);
+    hybridsocket.on('handshake', self.handshake.handle.bind(self.handshake, hybridsocket));
+    hybridsocket.on('heartbeat', self.heartbeat.handle.bind(self.heartbeat, hybridsocket));
+    hybridsocket.on('disconnect', self.heartbeat.clear.bind(self.heartbeat, hybridsocket.id));
+    hybridsocket.on('closing', Kick.handle.bind(null, hybridsocket));
+    self.emit('connection', hybridsocket);
+  };
+```
+
+在connector.js中监听了'connection'事件:
+
+```text
+pro.afterStart = function(cb) {
+  this.connector.start(cb);
+  this.connector.on('connection', hostFilter.bind(this, bindEvents));
+};
+```
+
+然后执行bindEvents:
+
+```text
+// /pomelo/lib/components/connector.js
+var bindEvents = function(self, socket) {
+  var curServer = self.app.getCurServer();
+  var maxConnections = curServer['max-connections'];
+  if (self.connection && maxConnections) {
+    self.connection.increaseConnectionCount();
+    var statisticInfo = self.connection.getStatisticsInfo();
+    if (statisticInfo.totalConnCount > maxConnections) {
+      logger.warn('the server %s has reached the max connections %s', curServer.id, maxConnections);
+      socket.disconnect();
+      return;
+    }
+  }
+```
+
+在pomelo/lib/common/service/sessionService.js中创建一个session.其中入参sid就是socket id:
+
+```text
+// pomelo/lib/common/service/sessionService.js
+SessionService.prototype.create = function(sid, frontendId, socket) {
+  var session = new Session(sid, frontendId, socket, this);
+  this.sessions[session.id] = session;
+
+  return session;
+};
+```
+
+接着会收到‘meaasge’消息:
+
+```text
+  // /pomelo/lib/connectors/hybridsocket.js
+  socket.on('message', function(msg) {
+    if(msg) {
+      msg = Package.decode(msg);
+      handler(self, msg);
+    }
+  });
+```
+
+在上述接口中一次收到TYPE\_HANDSHAKE、TYPE\_HANDSHAKE\_ACK、TYPE\_HEARTBEAT，最后收到TYPE\_DATA数据,于是进入回调:
+
+```text
+// pomelo/lib/connectors/common/handler.js
+var handleData = function(socket, pkg) {
+  if(socket.state !== ST_WORKING) {
+    return;
+  }
+  socket.emit('message', pkg);
+};
+```
+
+connector收到`'message'事件(客户端发送:`'gate.gateHandler.queryEntry'`)，并且处理:`
+
+```text
+//  /pomelo/lib/components/connector.js
+var bindEvents = function(self, socket) {
+ ...
+  // new message
+  socket.on('message', function(msg) {
+   ...
+
+    handleMessage(self, session, dmsg);
+  }); //on message end
+};
+```
+
+然后调用组件server.js的globalHandle接口:
+
+```text
+// pomelo/lib/components/server.js
+/**
+ * Proxy server global handle
+ */
+pro.globalHandle = function(msg, session, cb) {
+	this.server.globalHandle(msg, session, cb);
+};
+```
+
+再调用下述接口\(入参msg:{id: 1, type: 0, compressRoute: 0, route: 'gate.gateHandler.queryEntry', body: {…}, …}\):
+
+```text
+// /pomelo/lib/server/server.js
+pro.globalHandle = function(msg, session, cb) {
+...
+  var dispatch = function(err, resp, opts) {
+    if(err) {
+      handleError(true, self, err, msg, session, resp, opts, function(err, resp, opts) {
+        response(true, self, err, msg, session, resp, opts, cb);
+      });
+      return;
+    }
+
+    if(self.app.getServerType() !== routeRecord.serverType) {
+      doForward(self.app, msg, session, routeRecord, function(err, resp, opts) {
+        response(true, self, err, msg, session, resp, opts, cb);
+      });
+    } else {
+      doHandle(self, msg, session, routeRecord, function(err, resp, opts) {
+        response(true, self, err, msg, session, resp, opts, cb);
+      });
+    }
+  };
+  beforeFilter(true, self, msg, session, dispatch);
+};
+```
+
+最后会queryEntry，得到对应的connector对应的host和port。
+
+```text
+// app/servers/gate/handler/gateHandler.js
+handler.queryEntry = function(msg, session, next) {
+	...
+	// here we just start `ONE` connector server, so we return the connectors[0] 
+	var res = connectors[0];
+	next(null, {
+		code: 200,
+		host: res.host,
+		port: res.clientPort
+	});
+};
+```
+
+接着客户端发送进房间消息\(路由:'connector.entryHandler.enter'\)，服务器将用户添加到对应的channel:
+
+```text
+// app/servers/connector/handler/entryHandler.js
+handler.enter = function(msg, session, next) {
+	...
+
+	//put user into channel
+	self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users){
+		next(null, {
+			users:users
+		});
+	});
+};
+```
+
+然后进入ChatRemote.prototype.add:
+
+```text
+// app/servers/chat/remote/chatRemote.js
+ChatRemote.prototype.add = function(uid, sid, name, flag, cb) {
+	var channel = this.channelService.getChannel(name, flag);
+	var username = uid.split('*')[0];
+	var param = {
+		route: 'onAdd',
+		user: username
+	};
+	channel.pushMessage(param);
+
+	if( !! channel) {
+		channel.add(uid, sid);
+	}
+
+	cb(this.get(name, flag));
+};
+
+```
+
+接着进入回调，返回到entryHandler.js的next　回调,
+
+```text
+	//put user into channel
+	self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users){
+		next(null, {
+			users:users
+		});
+	});
+```
+
+最后调用:
+
+```text
+// pomelo/lib/server/server.js
+/**
+ * Send response to client and fire after filter chain if any.
+ */
+
+var response = function(isGlobal, server, err, msg, session, resp, opts, cb) 
 ```
 
