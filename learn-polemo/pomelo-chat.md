@@ -193,6 +193,8 @@ npm ERR!     /home/SENSETIME/chenqi1/.npm/_logs/2021-05-24T12_40_11_114Z-debug.l
 
 > npm install --global --production build-tools
 
+> note:windows执行：npm install --global windows-build-tools
+
 可是我操作以后还是不行。
 
 由于自己误操作，执行了:
