@@ -23,7 +23,7 @@ sudo apt update
 sudo apt install yarn
 ```
 
-如果您的系统上尚未安装 Node.js，则上面的命令将安装它。 那些使用 nvm 的人可以跳过 Node.js 安装：
+如果您的系统上尚未安装 Node.js，则上面的命令将安装它。 那些使用 nvm 的人可以跳过 Node.js 安装：　
 
 ```text
 sudo apt install --no-install-recommends yarn
