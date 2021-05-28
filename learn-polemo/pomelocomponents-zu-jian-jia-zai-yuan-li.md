@@ -176,7 +176,7 @@ this.loaded.push(component);
 方式二、app.backendSessionService
 ```
 
-组件都存在:start 和　afterStart方法，通过 `appUtil.optComponents`调用,参数如下:
+组件如果存在:start 和　afterStart方法，通过 `appUtil.optComponents`调用,参数如下:
 
 ```text
 Constants.RESERVED.START
