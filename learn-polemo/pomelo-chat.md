@@ -441,7 +441,7 @@ handler.queryEntry = function(msg, session, next) {
 };
 ```
 
-接着客户端发送进房间消息\(路由:'connector.entryHandler.enter'\)，服务器将用户添加到对应的channel:
+接着客户端发送进房间消息\(路由:'connector.entryHandler.enter'\)，服务器将用户添加到对应的channel\(这里的rpc好好学习下\):
 
 ```text
 // app/servers/connector/handler/entryHandler.js
