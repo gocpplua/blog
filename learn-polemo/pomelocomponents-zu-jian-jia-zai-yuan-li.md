@@ -34,7 +34,7 @@ function load(path, name) {
 这里我们来看下load.bind和\_\__defineGetter_\_\_:
 
 > **`bind()`** 方法创建一个新的函数，在 `bind()` 被调用时，这个新函数的 `this` 被指定为 `bind()` 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。
-
+>
 > **`__defineGetter__`** 方法可以将一个函数绑定在当前对象的指定属性上，当那个属性的值被读取时，你所绑定的函数就会被调用。
 
 下面我们以 pomelo\lib\components下面第一个组件`backendSession`为例。 根据\_\_**defineGetter\_\_** 可知，我们在调用Pomelo.backendSession，就是在调用\__load，而\_load_ 就是调用require\(./component/backendSession\)。
@@ -68,7 +68,7 @@ module.exports.loadDefaultComponents = function(app) {
 接下来就解析:
 
 ```text
-app.load(pomelo.backendSession, app.get('backendSessionConfig')); 
+app.load(pomelo.backendSession, app.get('backendSessionConfig'));
 ```
 
 * pomelo.backendSession
@@ -176,7 +176,7 @@ this.loaded.push(component);
 方式二、app.backendSessionService
 ```
 
-组件如果存在:start 和　afterStart方法，通过 `appUtil.optComponents`调用,参数如下:
+组件如果存在:start 和 afterStart方法，通过 `appUtil.optComponents`调用,参数如下:
 
 ```text
 Constants.RESERVED.START
@@ -184,8 +184,6 @@ Constants.RESERVED.AFTER_START
 ```
 
 Good Joob!!!
-
-
 
 如有疑问或错误，或者觉得我哪里漏说明，请联系我！
 

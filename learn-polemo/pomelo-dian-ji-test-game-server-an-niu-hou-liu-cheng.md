@@ -4,7 +4,7 @@
 
 点击:点击:Test Game Server 按钮，客户端向服务器发送连接消息。
 
-服务器:switcher.js 中　Switcher.prototype.newSocket接口，进入:
+服务器:switcher.js 中 Switcher.prototype.newSocket接口，进入:
 
 ```text
   socket.once('data', function(data) {
@@ -46,7 +46,7 @@ Processor.prototype.add = function(socket, data) {
 };
 ```
 
-通过vscode调试发现，分发的‘data’事件，会转换为'upgrade'，这个转换是在node内部　\_http\_server.js中onParserExecuteCommon接口实现:
+通过vscode调试发现，分发的‘data’事件，会转换为'upgrade'，这个转换是在node内部 \_http\_server.js中onParserExecuteCommon接口实现:
 
 ```text
 function onParserExecuteCommon(server, socket, parser, state, ret, d) {
@@ -104,7 +104,7 @@ completeHybiUpgrade1 ->
 completeHybiUpgrade2 -> new WebSocket
 ```
 
-最后在　completeHybiUpgrade2　中，创建客户端WebSocket。
+最后在 completeHybiUpgrade2 中，创建客户端WebSocket。
 
 在Websocket构造函数中，去建立连接:
 
@@ -209,6 +209,4 @@ Handler.prototype.entry = function(msg, session, next) {
 ```
 
 并在pro.globalHandle会respond给客户端，客户端收到消息后弹出窗口。
-
-
 

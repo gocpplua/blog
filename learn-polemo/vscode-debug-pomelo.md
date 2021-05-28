@@ -6,11 +6,11 @@ description: The most detailed version online
 
 ## vscode debug pomelo
 
-#### 1、安装pomelo
+### 1、安装pomelo
 
 npm install pomelo -g
 
-#### ２、创建HelloWorld 项目：\([中文](https://github.com/NetEase/pomelo/wiki/pomelo%E7%9A%84HelloWorld) \|  [English](https://github.com/NetEase/pomelo/wiki/HelloWorld-of-Pomelo)\)
+### ２、创建HelloWorld 项目：\([中文](https://github.com/NetEase/pomelo/wiki/pomelo%E7%9A%84HelloWorld) \|  [English](https://github.com/NetEase/pomelo/wiki/HelloWorld-of-Pomelo)\)
 
 2.1 使用pomelo的命令行工具可以快速创建一个项目，命令如下：
 
@@ -24,7 +24,7 @@ $ pomelo init ./HelloWorld
 
 > 备注:我在执行sh的时候，发现进不去web\_server文件夹去安装依赖，那么我们手动执行npm install -d安装就行
 
-#### 3、修改 servers.json
+### 3、修改 servers.json
 
 在game-server/config/servers.json,配置中添加 args 参数，此参数为node开启此服务器时命令参数
 
@@ -49,7 +49,7 @@ $ pomelo init ./HelloWorld
 }
 ```
 
-#### ４、配置launch.json
+### ４、配置launch.json
 
 使用vscode打开项目，配置launch.json,并且配置:"Node.js:Attach"。
 
@@ -72,14 +72,14 @@ $ pomelo init ./HelloWorld
 > }
 > ```
 >
-> #### 5、启动game-server服务器：
+> ### 5、启动game-server服务器：
 >
 > ```text
 > $ cd game-server
 > $ pomelo start
 > ```
 
-#### ６、启动web-server服务器：
+### ６、启动web-server服务器：
 
 ```text
 $ cd web-server
@@ -96,15 +96,15 @@ Handler.prototype.entry = function(msg, session, next) {
 };
 ```
 
-#### ８、Debug
+### ８、Debug
 
 vscode的Debug选项选择为:Attach后，按下F5。连接上后可以在VS中看到相关日志，也可以在game-server中看到日志:Debugger attached.
 
-#### ９、打开浏览器
+### ９、打开浏览器
 
 浏览器中输入:[http://127.0.0.1:3001](http://127.0.0.1:3001) -&gt; 这里的端口和web-server启动的时候一致
 
-#### 10、连接服务器
+### 10、连接服务器
 
 在浏览器页面上，点击:Test Game Server 按钮，就可以看到vs code 中断点命中
 

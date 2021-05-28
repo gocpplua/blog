@@ -6,8 +6,6 @@ pomelo提供了hybirdconnector和sioconnector，hybirdconnector支持TCP、WebSo
 
 我们创建项目的时候，选择的是: 1 for websocket\(native socket\)，那么项目还是可以支持tcp连接的，我们这边就使用原项目测试。
 
-
-
 测试tcp的话，我们只要启动game-server即可:
 
 ```text

@@ -186,13 +186,12 @@ npm timing npm Completed in 5451ms
 npm ERR! A complete log of this run can be found in:
 npm ERR!     /home/SENSETIME/chenqi1/.npm/_logs/2021-05-24T12_40_11_114Z-debug.log
 ============   game-server npm installed ============
-
 ```
 
 然后网上说执行下面命令即可:
 
 > npm install --global --production build-tools
-
+>
 > note:windows执行：npm install --global windows-build-tools
 
 可是我操作以后还是不行。
@@ -205,7 +204,7 @@ npm ERR!     /home/SENSETIME/chenqi1/.npm/_logs/2021-05-24T12_40_11_114Z-debug.l
 
 然后启动 web-server以后，通过浏览器登录两个账号，就可以聊天了。
 
-> 注意:enter your channel 　需要填写一样。
+> 注意:enter your channel 需要填写一样。
 
 通过命令查看pomelo服务:
 
@@ -218,10 +217,10 @@ serverId           serverType pid   rss(M) heapTotal(M) heapUsed(M) uptime(m)
 chat-server-1      chat       31392 45.67  12.90        11.77       3.50      
 connector-server-1 connector  31391 48.51  15.02        13.55       3.50      
 gate-server-1      gate       31393 47.05  14.27        12.92       3.50      
-master-server-1    master     31380 44.75  12.40        11.20       3.50 
+master-server-1    master     31380 44.75  12.40        11.20       3.50
 ```
 
-可以看到，除了master 和　connector　服务，还多了chat和gate。
+可以看到，除了master 和 connector 服务，还多了chat和gate。
 
 这些服务都是通过 servers.json 里面进行配置，下面就是servers.json 文件:
 
@@ -235,8 +234,8 @@ master-server-1    master     31380 44.75  12.40        11.20       3.50
              {"id":"chat-server-1", "host":"127.0.0.1", "port":6050}
         ],
         "gate":[
-	       {"id": "gate-server-1", "host": "127.0.0.1", "clientPort": 3014, "frontend": true}
-	    ]
+           {"id": "gate-server-1", "host": "127.0.0.1", "clientPort": 3014, "frontend": true}
+        ]
     },
     "production":{
            "connector":[
@@ -250,22 +249,21 @@ master-server-1    master     31380 44.75  12.40        11.20       3.50
         ]
   }
 }
-
 ```
 
-  配置中的各字段：
+配置中的各字段：
 
-  **id:**   字符串类型的应用服务器ID
+**id:** 字符串类型的应用服务器ID
 
-  **host：**应用服务器的IP或者域名
+**host：**应用服务器的IP或者域名
 
-  **port：**RPC请求监听的端口
+**port：**RPC请求监听的端口
 
-  **clientPort：** 前端服务器的客户端请求的监听端口
+**clientPort：** 前端服务器的客户端请求的监听端口
 
-  **frontend：**bool类型，是否是前端服务器，默认: false
+**frontend：**bool类型，是否是前端服务器，默认: false
 
-接着启动web-server，然后打开浏览器，输入`http://127.0.0.1:3001/index.html`, 输入一个用户名和一个房间名，点击　Join按钮。
+接着启动web-server，然后打开浏览器，输入`http://127.0.0.1:3001/index.html`, 输入一个用户名和一个房间名，点击 Join按钮。
 
 首先在下述代码中收到消息:
 
@@ -393,7 +391,7 @@ var bindEvents = function(self, socket) {
  * Proxy server global handle
  */
 pro.globalHandle = function(msg, session, cb) {
-	this.server.globalHandle(msg, session, cb);
+    this.server.globalHandle(msg, session, cb);
 };
 ```
 
@@ -430,14 +428,14 @@ pro.globalHandle = function(msg, session, cb) {
 ```text
 // app/servers/gate/handler/gateHandler.js
 handler.queryEntry = function(msg, session, next) {
-	...
-	// here we just start `ONE` connector server, so we return the connectors[0] 
-	var res = connectors[0];
-	next(null, {
-		code: 200,
-		host: res.host,
-		port: res.clientPort
-	});
+    ...
+    // here we just start `ONE` connector server, so we return the connectors[0] 
+    var res = connectors[0];
+    next(null, {
+        code: 200,
+        host: res.host,
+        port: res.clientPort
+    });
 };
 ```
 
@@ -446,14 +444,14 @@ handler.queryEntry = function(msg, session, next) {
 ```text
 // app/servers/connector/handler/entryHandler.js
 handler.enter = function(msg, session, next) {
-	...
+    ...
 
-	//put user into channel
-	self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users){
-		next(null, {
-			users:users
-		});
-	});
+    //put user into channel
+    self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users){
+        next(null, {
+            users:users
+        });
+    });
 };
 ```
 
@@ -462,32 +460,31 @@ handler.enter = function(msg, session, next) {
 ```text
 // app/servers/chat/remote/chatRemote.js
 ChatRemote.prototype.add = function(uid, sid, name, flag, cb) {
-	var channel = this.channelService.getChannel(name, flag);
-	var username = uid.split('*')[0];
-	var param = {
-		route: 'onAdd',
-		user: username
-	};
-	channel.pushMessage(param);
+    var channel = this.channelService.getChannel(name, flag);
+    var username = uid.split('*')[0];
+    var param = {
+        route: 'onAdd',
+        user: username
+    };
+    channel.pushMessage(param);
 
-	if( !! channel) {
-		channel.add(uid, sid);
-	}
+    if( !! channel) {
+        channel.add(uid, sid);
+    }
 
-	cb(this.get(name, flag));
+    cb(this.get(name, flag));
 };
-
 ```
 
-接着进入回调，返回到entryHandler.js的next　回调,
+接着进入回调，返回到entryHandler.js的next 回调,
 
 ```text
-	//put user into channel
-	self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users){
-		next(null, {
-			users:users
-		});
-	});
+    //put user into channel
+    self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users){
+        next(null, {
+            users:users
+        });
+    });
 ```
 
 最后调用:
@@ -498,6 +495,6 @@ ChatRemote.prototype.add = function(uid, sid, name, flag, cb) {
  * Send response to client and fire after filter chain if any.
  */
 
-var response = function(isGlobal, server, err, msg, session, resp, opts, cb) 
+var response = function(isGlobal, server, err, msg, session, resp, opts, cb)
 ```
 

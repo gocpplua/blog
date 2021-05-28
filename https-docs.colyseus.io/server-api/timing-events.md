@@ -56,7 +56,7 @@ export class MyRoom extends Room {
 
 **clock.clear\(\)**
 
-{% embed url="https://清除clock.setInterval（）和clock.setTimeout（）注册的所有间隔和超时。" %}
+{% embed url="https://清除clock.setInterval（）和clock.setTimeout（）注册的所有间隔和超时。" caption="" %}
 
 **clock.start\(\)**
 
@@ -121,6 +121,4 @@ export class MyRoom extends Room {
 **delayed.paused: boolean**
 
 返回`true`计时器是否已通过暂停`.pause()`。
-
-
 

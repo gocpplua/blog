@@ -8,7 +8,7 @@ description: State Handling » Schema　状态处理»模式
 
 `Schema`结构只能用于房间的状态（可同步数据）。 您不需要将 `Schema` 及其其他结构用于不可同步算法中的数据。
 
-### 服务器端 <a id="server-side"></a>
+## 服务器端 <a id="server-side"></a>
 
 要使用`SchemaSerializer`，您必须：
 
@@ -29,15 +29,13 @@ class MyState extends Schema {
 }
 ```
 
-#### Primitive types <a id="primitive-types"></a>
+### Primitive types <a id="primitive-types"></a>
 
 这些是您可以为`@type()`装饰器提供的类型及其限制。
 
 > 如果您确切知道`number`属性的范围，则可以通过为其提供正确的原始类型来优化序列化。
 >
 > 否则，请使用`"number"`，它将在序列化过程中添加一个额外的字节来标识自身。
-
-
 
 | 类型 | 描述 | 局限性 |
 | :--- | :--- | :--- |
@@ -55,7 +53,7 @@ class MyState extends Schema {
 | `"float32"` | 单精度浮点数 | `-3.40282347e+38` 至 `3.40282347e+38` |
 | `"float64"` | 双精度浮点数 | `-1.7976931348623157e+308` 至 `1.7976931348623157e+308` |
 
-#### 子架构属性 <a id="child-schema-properties"></a>
+### 子架构属性 <a id="child-schema-properties"></a>
 
 您可以在“root”状态定义中定义更多自定义数据类型，作为直接引用，映射或数组。
 
@@ -79,7 +77,7 @@ class MyState extends Schema {
 }
 ```
 
-#### 数组模式 <a id="arrayschema"></a>
+### 数组模式 <a id="arrayschema"></a>
 
 `ArraySchema`是内置的JavaScript synchronizeable版本[数组](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)类型。
 
@@ -141,8 +139,6 @@ animals.length
 // output: 3
 ```
 
-
-
 **array.shift\(\)**
 
 从数组中删除第一个元素，并返回该删除的元素。此方法更改数组的长度。
@@ -199,11 +195,11 @@ this.state.array1.forEach(element => {
 // output: "c"
 ```
 
-#### MapSchema[¶](https://docs.colyseus.io/state/schema/#mapschema) <a id="mapschema"></a>
+### MapSchema[¶](https://docs.colyseus.io/state/schema/#mapschema) <a id="mapschema"></a>
 
 `MapSchema`是内置的JavaScript synchronizeable版本的[Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)类型。
 
-建议使用Map按ID跟踪您的游戏实体，例如玩家，敌人等。 
+建议使用Map按ID跟踪您的游戏实体，例如玩家，敌人等。
 
 > 目前仅支持字符串键
 >
@@ -225,8 +221,6 @@ class MyState extends Schema {
     players = new MapSchema<Player>();
 }
 ```
-
-
 
 **map.get\(\)¶**
 
@@ -318,5 +312,5 @@ this.state.players.forEach((value, key) => {
 >
 > 您可以从“地图”中使用更多方法。[看一下MDN Maps文档](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/)。
 
-#### 集合模式[¶](https://docs.colyseus.io/state/schema/#collectionschema) <a id="collectionschema"></a>
+### 集合模式[¶](https://docs.colyseus.io/state/schema/#collectionschema) <a id="collectionschema"></a>
 

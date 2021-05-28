@@ -63,7 +63,7 @@ var handleHeartbeat = function(socket, pkg) {
 };
 ```
 
-hybridsocket　收到　`'heartbeat'` 消息后，执行回调:
+hybridsocket 收到 `'heartbeat'` 消息后，执行回调:
 
 ```text
 // lib/connectors/commands/heartbeat.js
@@ -123,7 +123,7 @@ Socket.prototype.disconnect = function() {
 };
 ```
 
-发送`'close'事件，关闭socket。`　
+发送`'close'事件，关闭socket。`
 
 `我们在监听'close'事件看到，写法都是:`
 

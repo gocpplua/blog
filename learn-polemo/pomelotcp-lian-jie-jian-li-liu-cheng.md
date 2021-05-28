@@ -124,9 +124,7 @@ app.configure('production|development', 'connector', function(){
 });
 ```
 
-
-
-我们接着往下讲，`'connection'　监听以后，`然后执行回调`newSocket`:
+我们接着往下讲，`'connection' 监听以后，`然后执行回调`newSocket`:
 
 ```text
 Switcher.prototype.newSocket = function(socket) {
@@ -178,7 +176,7 @@ Processor.prototype.add = function(socket, data) {
 };
 ```
 
-#### 第一步：发送`'connection'事件`
+## 第一步：发送`'connection'事件`
 
 `被Switcher监听:`
 
@@ -254,11 +252,9 @@ var bindEvents = function(self, socket) {
 
 所以我们就明白了，客户端发送上来的消息都是会先经过connector.js中。
 
+## 第二步：socket.emit\('data', data\)
 
-
-#### 第二步：socket.emit\('data', data\)
-
-我们知道socket 其实就是　Switcher，而现在Switcher已经不监听`'data'消息。`
+我们知道socket 其实就是 Switcher，而现在Switcher已经不监听`'data'消息。`
 
 `我们看下socket去构造`TcpSocket发生了什么:
 
@@ -405,7 +401,7 @@ var response = function(socket, sys, resp) {
 };
 ```
 
-handshakeResponse　实现:
+handshakeResponse 实现:
 
 ```text
 // pomelo/lib/connectors/hybridsocket.js
@@ -419,5 +415,5 @@ Socket.prototype.handshakeResponse = function(resp) {
 };
 ```
 
-Good Job！！　从建立TCP到收发数据，搞定！！
+Good Job！！ 从建立TCP到收发数据，搞定！！
 

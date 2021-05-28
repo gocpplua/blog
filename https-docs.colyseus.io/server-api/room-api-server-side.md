@@ -26,11 +26,11 @@ export class MyRoom extends Room {
 }
 ```
 
-### Room lifecycle
+## Room lifecycle
 
 这些方法对应于房间的生命周期。
 
-#### `onCreate (options)` <a id="oncreate-options"></a>
+### `onCreate (options)` <a id="oncreate-options"></a>
 
 房间初始化后被调用一次。您可以在注册房间处理程序时指定自定义初始化选项。
 
@@ -38,7 +38,7 @@ export class MyRoom extends Room {
 >
 > 这些选项将包含您在[Server＃define（）](https://docs.colyseus.io/server/api/#define-name-string-handler-room-options-any)上指定的合并值+ [client.joinOrCreate（](https://docs.colyseus.io/client/client/#joinorcreate-roomname-string-options-any)）或[client.create（）](https://docs.colyseus.io/client/client/#create-roomname-string-options-any)提供的选项
 
-#### `onAuth (client, options, request)` <a id="onauth-client-options-request"></a>
+### `onAuth (client, options, request)` <a id="onauth-client-options-request"></a>
 
 onAuth（）方法将在onJoin（）之前执行。 它可以用来验证加入房间的客户的真实性。
 
@@ -138,7 +138,7 @@ client.joinOrCreate("world", {
 });
 ```
 
-#### `onJoin (client, options, auth?)` <a id="onjoin-client-options-auth"></a>
+### `onJoin (client, options, auth?)` <a id="onjoin-client-options-auth"></a>
 
 **参数：**
 
@@ -148,7 +148,7 @@ client.joinOrCreate("world", {
 
 当客户端成功加入会议室之后`requestJoin`，`onAuth`成功之后被调用。
 
-#### `onLeave (client, consented)` <a id="onleave-client-consented"></a>
+### `onLeave (client, consented)` <a id="onleave-client-consented"></a>
 
 当客户离开房间时被调用。如果断开连接是[由客户端发起的](https://docs.colyseus.io/client/room/#leave)，则`consented`参数将为`true`，否则为`false`。
 
@@ -173,7 +173,7 @@ async onLeave(client, consented) {
 }
 ```
 
-#### `onDispose ()` <a id="ondispose"></a>
+### `onDispose ()` <a id="ondispose"></a>
 
 在销毁房间之前调用onDispose（）方法，这种情况发生在`:`
 
@@ -184,7 +184,7 @@ async onLeave(client, consented) {
 
 请参见[正常关机](https://docs.colyseus.io/server/graceful-shutdown)。
 
-#### Example room <a id="example-room"></a>
+### Example room <a id="example-room"></a>
 
 这个例子演示了整个房间实现`onCreate`，`onJoin`和`onMessage`方法。
 
@@ -283,9 +283,9 @@ exports.GameRoom = class GameRoom extends colyseus.Room {
 }
 ```
 
-### 公开方法
+## 公开方法
 
-#### `onMessage (type, callback)` <a id="onmessage-type-callback"></a>
+### `onMessage (type, callback)` <a id="onmessage-type-callback"></a>
 
 注册一个回调以处理客户端发送的消息类型。所述`type`参数可以是`string`或`number`。
 
@@ -321,19 +321,19 @@ onCreate () {
 }
 ```
 
-#### `setState (object)` <a id="setstate-object"></a>
+### `setState (object)` <a id="setstate-object"></a>
 
 设置新的房间状态实例。有关状态对象的更多详细信息，请参见[状态处理](https://docs.colyseus.io/state/overview/)。强烈建议使用新的[架构序列化器](https://docs.colyseus.io/state/schema/)来处理您的状态。
 
 > Warning
 >
 > 不要在房间状态下调用此方法进行更新。 每次调用它时，都会重置二进制补丁算法。
-
+>
 > Tip
 >
 > 通常，您在房间处理程序中的onCreate（）过程中只会调用一次此方法。
 
-#### `setSimulationInterval (callback[, milliseconds=16.6])` <a id="setsimulationinterval-callback-milliseconds166"></a>
+### `setSimulationInterval (callback[, milliseconds=16.6])` <a id="setsimulationinterval-callback-milliseconds166"></a>
 
 （可选）设置可以更改游戏状态的模拟间隔。模拟间隔是您的游戏循环。默认模拟间隔：16.6毫秒（60fps）
 
@@ -348,17 +348,17 @@ update (deltaTime) {
 }
 ```
 
-#### `setPatchRate (milliseconds)` <a id="setpatchrate-milliseconds"></a>
+### `setPatchRate (milliseconds)` <a id="setpatchrate-milliseconds"></a>
 
 设置频率，应将修补状态发送给所有客户端。默认值为`50ms`（20fps）
 
-#### `setPrivate (bool)` <a id="setprivate-bool"></a>
+### `setPrivate (bool)` <a id="setprivate-bool"></a>
 
 将房间列表设置为私人房间（如果提供了false，则恢复为公共房间）。
 
 私人房间未在getAvailableRooms（）方法中列出。
 
-#### `setMetadata (metadata)` <a id="setmetadata-metadata"></a>
+### `setMetadata (metadata)` <a id="setmetadata-metadata"></a>
 
 将元数据设置为此房间。每个房间实例可能都附有元数据-附加元数据的唯一目的是从客户端获取可用房间列表时，将一个房间与另一个房间区分开`roomId`，并使用[`client.getAvailableRooms()`](https://docs.colyseus.io/client/client/#getavailablerooms-roomname)进行连接。
 
@@ -384,17 +384,17 @@ client.getAvailableRooms("battle").then(rooms => {
 });
 ```
 
-#### `setSeatReservationTime (seconds)` <a id="setseatreservationtime-seconds"></a>
+### `setSeatReservationTime (seconds)` <a id="setseatreservationtime-seconds"></a>
 
 设置`Room`可以等待客户端有效加入Room的秒数。您应该考虑[`onAuth()`](https://docs.colyseus.io/server/room/#onauth-client-options-request)需要等待多长时间才能设置不同的座位预定时间。默认值为15秒。
 
 `COLYSEUS_SEAT_RESERVATION_TIME`如果您想全局更改座位预订时间，则可以设置环境变量。
 
-#### `send (client, message)` <a id="send-client-message"></a>
+### `send (client, message)` <a id="send-client-message"></a>
 
 > `this.send()`已不推荐使用。请[`client.send()`改用](https://docs.colyseus.io/server/client/#sendtype-message)。
 
-#### `broadcast (type, message, options?)` <a id="broadcast-type-message-options"></a>
+### `broadcast (type, message, options?)` <a id="broadcast-type-message-options"></a>
 
 向所有连接的客户端发送消息。
 
@@ -462,17 +462,15 @@ onCreate() {
 >
 > [查看如何在客户端处理这些onMessage（）。](https://docs.colyseus.io/client/room/#onmessage)
 
-
-
-#### `lock ()`[¶](https://docs.colyseus.io/server/room/#lock) <a id="lock"></a>
+### `lock ()`[¶](https://docs.colyseus.io/server/room/#lock) <a id="lock"></a>
 
 锁定房间会将其从可用房间池中删除，以供新客户端连接。
 
-#### `unlock ()`[¶](https://docs.colyseus.io/server/room/#unlock) <a id="unlock"></a>
+### `unlock ()`[¶](https://docs.colyseus.io/server/room/#unlock) <a id="unlock"></a>
 
 解锁房间将其返回到可用房间池中，以供新客户端连接。
 
-#### `allowReconnection (client, seconds?)`[¶](https://docs.colyseus.io/server/room/#allowreconnection-client-seconds) <a id="allowreconnection-client-seconds"></a>
+### `allowReconnection (client, seconds?)`[¶](https://docs.colyseus.io/server/room/#allowreconnection-client-seconds) <a id="allowreconnection-client-seconds"></a>
 
 允许指定的客户[`reconnect`](https://docs.colyseus.io/client/client/#reconnect-roomid-string-sessionid-string)进入房间。必须在内部[`onLeave()`](https://docs.colyseus.io/server/room/#onleave-client)方法中使用。
 
@@ -550,11 +548,11 @@ async onLeave (client: Client, consented: boolean) {
 }
 ```
 
-#### `disconnect ()`[¶](https://docs.colyseus.io/server/room/#disconnect) <a id="disconnect"></a>
+### `disconnect ()`[¶](https://docs.colyseus.io/server/room/#disconnect) <a id="disconnect"></a>
 
 断开所有客户端的连接，然后处理。
 
-#### `broadcastPatch ()` <a id="broadcastpatch"></a>
+### `broadcastPatch ()` <a id="broadcastpatch"></a>
 
 > 您可能不需要这个！
 >
@@ -581,50 +579,50 @@ onCreate() {
 }
 ```
 
-### 公共属性
+## 公共属性
 
-#### `roomId: string`[¶](https://docs.colyseus.io/server/room/#roomid-string) <a id="roomid-string"></a>
+### `roomId: string`[¶](https://docs.colyseus.io/server/room/#roomid-string) <a id="roomid-string"></a>
 
 房间的唯一的，自动生成的9个字符长的ID。
 
 您可以`this.roomId`在期间更换`onCreate()`。您需要确保`roomId`唯一。
 
-#### `roomName: string`[¶](https://docs.colyseus.io/server/room/#roomname-string) <a id="roomname-string"></a>
+### `roomName: string`[¶](https://docs.colyseus.io/server/room/#roomname-string) <a id="roomname-string"></a>
 
 您作为的第一个参数提供的房间名称[`gameServer.define()`](https://docs.colyseus.io/server/api/#define-name-string-handler-room-options-any)。
 
-#### `state: T`[¶](https://docs.colyseus.io/server/room/#state-t) <a id="state-t"></a>
+### `state: T`[¶](https://docs.colyseus.io/server/room/#state-t) <a id="state-t"></a>
 
 您提供给的状态实例[`setState()`](https://docs.colyseus.io/server/room/#setstate-object)。
 
-#### `clients: Client[]`[¶](https://docs.colyseus.io/server/room/#clients-client) <a id="clients-client"></a>
+### `clients: Client[]`[¶](https://docs.colyseus.io/server/room/#clients-client) <a id="clients-client"></a>
 
 连接的客户端阵列。请参阅[Web-Socket Client](https://docs.colyseus.io/server/client)。
 
-#### `maxClients: number`[¶](https://docs.colyseus.io/server/room/#maxclients-number) <a id="maxclients-number"></a>
+### `maxClients: number`[¶](https://docs.colyseus.io/server/room/#maxclients-number) <a id="maxclients-number"></a>
 
 允许连接到房间的最大客户端数。当房间达到此限制时，它将自动锁定。除非您通过[lock（）](https://docs.colyseus.io/server/room/#lock)方法明确锁定了房间，否则一旦客户端断开与房间的连接，房间就会被解锁。
 
-#### `patchRate: number`[¶](https://docs.colyseus.io/server/room/#patchrate-number) <a id="patchrate-number"></a>
+### `patchRate: number`[¶](https://docs.colyseus.io/server/room/#patchrate-number) <a id="patchrate-number"></a>
 
 将房间状态发送到连接的客户端的频率（以毫秒为单位）。默认值为`50`ms（20fps）
 
-#### `autoDispose: boolean`[¶](https://docs.colyseus.io/server/room/#autodispose-boolean) <a id="autodispose-boolean"></a>
+### `autoDispose: boolean`[¶](https://docs.colyseus.io/server/room/#autodispose-boolean) <a id="autodispose-boolean"></a>
 
 当最后一个客户端断开连接时，自动处理房间。默认是`true`
 
-#### `locked: boolean` （只读）[¶](https://docs.colyseus.io/server/room/#locked-boolean-read-only) <a id="locked-boolean-read-only"></a>
+### `locked: boolean` （只读）[¶](https://docs.colyseus.io/server/room/#locked-boolean-read-only) <a id="locked-boolean-read-only"></a>
 
 该属性将在以下情况下更改：
 
 * 已达到允许的最大客户数量（`maxClients`）
 * 您使用[`lock()`](https://docs.colyseus.io/server/room/#lock)或手动锁定或解锁了房间[`unlock()`](https://docs.colyseus.io/server/room/#unlock)。
 
-#### `clock: ClockTimer`[¶](https://docs.colyseus.io/server/room/#clock-clocktimer) <a id="clock-clocktimer"></a>
+### `clock: ClockTimer`[¶](https://docs.colyseus.io/server/room/#clock-clocktimer) <a id="clock-clocktimer"></a>
 
 一个[`ClockTimer`](https://github.com/gamestdio/timer#api)实例，用于 [计时事件](https://docs.colyseus.io/server/timing-events)。
 
-#### `presence: Presence`[¶](https://docs.colyseus.io/server/room/#presence-presence) <a id="presence-presence"></a>
+### `presence: Presence`[¶](https://docs.colyseus.io/server/room/#presence-presence) <a id="presence-presence"></a>
 
 该`presence`实例。有关更多详细信息，请检查[Presence API](https://docs.colyseus.io/server/presence)。
 

@@ -12,7 +12,7 @@ description: 正常关机
 
 如果您要在`onLeave`/上执行异步任务`onDispose`，则应返回`Promise`，并在任务准备就绪时对其进行解析。同样适用于`onShutdown(callback)`。
 
-### 返回一个 `Promise`[¶](https://docs.colyseus.io/server/graceful-shutdown/#returning-a-promise) <a id="returning-a-promise"></a>
+## 返回一个 `Promise`[¶](https://docs.colyseus.io/server/graceful-shutdown/#returning-a-promise) <a id="returning-a-promise"></a>
 
 通过返回 `Promise`，服务器将在杀死工作进程之前等待它们完成。
 
@@ -46,7 +46,7 @@ class MyRoom extends Room {
 }
 ```
 
-### 使用 `async`[¶](https://docs.colyseus.io/server/graceful-shutdown/#using-async) <a id="using-async"></a>
+## 使用 `async`[¶](https://docs.colyseus.io/server/graceful-shutdown/#using-async) <a id="using-async"></a>
 
 `async`关键字将使你的函数在后台返回一个`Promise`。[阅读有关Async / Await的更多信息](https://basarat.gitbooks.io/typescript/content/docs/async-await.html)。
 
@@ -64,7 +64,7 @@ class MyRoom extends Room {
 }
 ```
 
-### 进程关闭回调[¶](https://docs.colyseus.io/server/graceful-shutdown/#process-shutdown-callback) <a id="process-shutdown-callback"></a>
+## 进程关闭回调[¶](https://docs.colyseus.io/server/graceful-shutdown/#process-shutdown-callback) <a id="process-shutdown-callback"></a>
 
 您还可以通过设置`onShutdown`回调来监听进程关闭。
 
@@ -77,6 +77,4 @@ server.onShutdown(function () {
     console.log("master process is being shut down!");
 });
 ```
-
-
 

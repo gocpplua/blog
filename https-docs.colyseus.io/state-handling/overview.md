@@ -8,14 +8,10 @@ description: Overview 概述
 
 在Colyseus中，房间处理程序是**有状态**的。每个房间都有自己的状态。状态的突变会自动同步到所有连接的客户端。
 
-
-
 ### 序列化方法[¶](https://docs.colyseus.io/state/overview/#serialization-methods) <a id="serialization-methods"></a>
 
 * [Schema](https://docs.colyseus.io/state/schema/) （默认）
 * [Fossil Delta](https://docs.colyseus.io/state/fossil-delta/) （已弃用）
-
-
 
 ### 状态同步时[¶](https://docs.colyseus.io/state/overview/#when-the-state-is-synchronized) <a id="when-the-state-is-synchronized"></a>
 

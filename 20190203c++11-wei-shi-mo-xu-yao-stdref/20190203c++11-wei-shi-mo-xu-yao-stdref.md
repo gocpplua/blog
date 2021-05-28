@@ -1,0 +1,16 @@
+# C++11为什么需要std::ref/reference\_wrapper \#
+
+在看C++11的时候，一直很迷惑，为什么C++已经存在引用\(&\)，现在在C++11中又有一个std::ref,感觉和引用也差不多。 在查找部分资料以后，发现C++11部分新特性中存在一些限制，例如：
+
+* 若需要传递引用参数给线程函数，则必须包装它（例如用 std::ref 或 std::cref ）
+* bind 的参数被复制或移动，而且决不按引用传递，除非包装于 std::ref 或 std::cref
+* 不仅仅以上
+
+接着我看着写关于std::reference\_wrapper：
+
+> std::reference\_wrapper 是包装引用于可复制、可赋值对象的类模板。它常用作将容器存储入无法正常保有引用的标准容器（类似 std::vector ）的机制。特别是， std::reference\_wrapper 是围绕到类型 T 的对象引用或函数引用的可复制构造 \(CopyConstructible\) 且可复制赋值 \(CopyAssignable\) 的包装器。 std::reference\_wrapper 的实例是对象（它们可被复制或存储于容器），但它们能隐式转换成 T& ，故能以之为以引用接收底层类型的函数的参数。
+>
+> 若存储的引用可调用 \(Callable\) ，则可以相同参数调用 std::reference\_wrapper 。辅助函数 std::ref 与 std::cref 常用于生成 std::reference\_wrapper 对象。std::reference\_wrapper 亦用于按引用传递对象给 std::bind 或 std::thread 的构造函数。保证 std::reference\_wrapper 可平凡复制\(TriviallyCopyable\) 。\(C++17 起\)
+
+接下来我们看几个官方的例子：
+

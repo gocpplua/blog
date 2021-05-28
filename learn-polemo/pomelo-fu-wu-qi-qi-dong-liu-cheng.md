@@ -31,14 +31,14 @@ function start(opts) {
   if (!fs.existsSync(logDir)) {
     mkdir(logDir);
   }
-  
+
   var ls;
   var type = opts.type || constants.RESERVED.ALL;
   var params = [absScript, 'env=' + opts.env, 'type=' + type];
   if(!!opts.id) {
     params.push('startId=' + opts.id);
   }
-  
+
   //　spawn　创建子进程
   if (opts.daemon) {
     ls = spawn(process.execPath, params, {detached: true, stdio: 'ignore'});
@@ -87,7 +87,7 @@ process.on('uncaughtException', function (err) {
 });
 ```
 
-在pomelo的`'start()'函数中，使用`child\_process._spawn_\(\) 　异步生成子进程。
+在pomelo的`'start()'函数中，使用`child\_process._spawn_\(\) 异步生成子进程。
 
 其中参数`process.execPath,` 是 Node.js 进程的可执行文件的绝对路径。
 
@@ -101,10 +101,9 @@ undefined
   'env=development',
   'type=all'
 ]
-
 ```
 
-所以pomelo　start 其实就是执行:
+所以pomelo start 其实就是执行:
 
 ```text
 >$ node /data/gocpplua/pomelo/pomelo_prj/HelloWorld/game-server/app.js env=development type=all
@@ -119,7 +118,7 @@ undefined
     utils.invokeCallback(cb, new Error('application has already start.'));
     return;
   }
-  
+
   var self = this;
   appUtil.startByType(self, function() {
     appUtil.loadDefaultComponents(self);
