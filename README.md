@@ -1,8 +1,10 @@
 ---
-description: 'https://github.com/NetEase/pomelo'
+description: 原型基于Pomelo
 ---
 
-# Polemo
+# pinus
 
-　
+[pomelo wiki](https://github.com/NetEase/pomelo/wiki/Home-in-Chinese)
+
+
 
