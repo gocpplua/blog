@@ -24,7 +24,7 @@
   * [Pomelo点击:Test Game Server 按钮后流程](learn-polemo/pomelo-dian-ji-test-game-server-an-niu-hou-liu-cheng.md)
   * [Pomelo　tcp 连接测试](learn-polemo/pomelotcp-lian-jie-ce-shi.md)
   * [【Pomelo】chat](learn-polemo/pomelo-chat.md)
-  * [【pomelo】multi chat](learn-polemo/pomelo-multi-chat.md)
+  * [【pomelo】multi chat和broadcast](learn-polemo/pomelo-multi-chat.md)
   * [【Pomelo】tcp 连接建立和数据发送流程](learn-polemo/pomelotcp-lian-jie-jian-li-liu-cheng.md)
   * [Pomelo Heartbeat](learn-polemo/pomelo-heartbeat.md)
   * [【Pomelo】pomelo start 启动流程](learn-polemo/pomelo-fu-wu-qi-qi-dong-liu-cheng.md)

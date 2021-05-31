@@ -1,6 +1,147 @@
-# 【pomelo】multi chat
+# 【pomelo】multi chat和broadcast
 
-官方[\[扩充服务器\]](https://github.com/NetEase/pomelo/wiki/%E6%89%A9%E5%85%85%E6%9C%8D%E5%8A%A1%E5%99%A8)教程
+multi chat可以参考官方[\[扩充服务器\]](https://github.com/NetEase/pomelo/wiki/%E6%89%A9%E5%85%85%E6%9C%8D%E5%8A%A1%E5%99%A8)教程，感觉还是可以看懂的。下面就讲解下广播。
+
+关于如何选择connector和chat直接省略。我们直接从进入Join开始。客户端点击Join以后，服务器会进入到master服务器下述函数:
+
+```text
+// chatofpomelo-websocket/game-server/app/servers/connector/handler/entryHandler.js
+
+/**
+ * New client entry chat server.
+ *
+ * @param  {Object}   msg     request message
+ * @param  {Object}   session current session object
+ * @param  {Function} next    next stemp callback
+ * @return {Void}
+ */
+handler.enter = function(msg, session, next) {
+	...
+	//put user into channel
+	self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users){
+		next(null, {
+			users:users
+		});
+	});
+};
+```
+
+然后通过rpc调用\(想要了解rpc的，自行处理\)。
+
+在下述函数选择对应的chat服务器:
+
+```text
+// pomelo/lib/components/proxy.js
+var defaultRoute = function(session, msg, app, cb) {
+  var list = app.getServersByType(msg.serverType);
+  if (!list || !list.length) {
+    cb(new Error('can not find server info for type:' + msg.serverType));
+    return;
+  }
+
+  var uid = session ? (session.uid || '') : '';
+  var index = Math.abs(crc.crc32(uid.toString())) % list.length;
+  utils.invokeCallback(cb, null, list[index].id);
+};
+```
+
+进入到chat服务器：
+
+```text
+// chatofpomelo-websocket/game-server/app/servers/chat/remote/chatRemote.js
+/**
+ * Add user into chat channel.
+ *
+ * @param {String} uid unique id for user
+ * @param {String} sid server id
+ * @param {String} name channel name
+ * @param {boolean} flag channel parameter
+ *
+ */
+ChatRemote.prototype.add = function(uid, sid, name, flag, cb) {　// flag = true
+	var channel = this.channelService.getChannel(name, flag);
+	var username = uid.split('*')[0];
+	var param = {
+		route: 'onAdd',
+		user: username
+	};
+	channel.pushMessage(param);
+
+	if( !! channel) {
+		channel.add(uid, sid);
+	}
+
+	cb(this.get(name, flag));
+};
+```
+
+我们首先会尝试获取channel：
+
+```text
+/**
+ * Get channel by name.
+ *
+ * @param {String} name channel's name
+ * @param {Boolean} create if true, create channel
+ * @return {Channel}
+ * @memberOf ChannelService
+ */
+ChannelService.prototype.getChannel = function(name, create) {// create = true
+  var channel = this.channels[name];
+  if(!channel && !!create) {
+    channel = this.channels[name] = new Channel(name, this);
+    addToStore(this, genKey(this), genKey(this, name));
+  }
+  return channel;
+};
+```
+
+到获取就返回channel，获取不到就创建一个。
+
+```text
+var addToStore = function(self, key, value) {
+  if(!!self.store) {
+    self.store.add(key, value, function(err) {
+      if(!!err) {
+        logger.error('add key: %s value: %s to store, with err: %j', key, value, err.stack);
+      }
+    });
+  }
+};
+```
+
+回到`ChatRemote.prototype.add`,获取成功后，将消息发送给channel中所有玩家,调用`Channel.prototype.pushMessage`。
+
+```text
+/**
+ * Push message to all the members in the channel
+ *
+ * @param {String} route message route
+ * @param {Object} msg message that would be sent to client
+ * @param {Object} opts user-defined push options, optional
+ * @param {Function} cb callback function
+ */
+Channel.prototype.pushMessage = function(route, msg, opts, cb) {
+  if(this.state !== ST_INITED) {
+    utils.invokeCallback(new Error('channel is not running now'));
+    return;
+  }
+
+  if(typeof route !== 'string') {
+    cb = opts;
+    opts = msg;
+    msg = route;
+    route = msg.route;
+  }
+
+  if(!cb && typeof opts === 'function') {
+    cb = opts;
+    opts = {};
+  }
+
+  sendMessageByGroup(this.__channelService__, route, msg, this.groups, opts, cb);
+};
+```
 
 [https://itbilu.com/nodejs/npm/EknY6k0FX.html\#source](https://itbilu.com/nodejs/npm/EknY6k0FX.html#source)
 
