@@ -487,6 +487,43 @@ ChatRemote.prototype.add = function(uid, sid, name, flag, cb) {
     });
 ```
 
+进入:
+
+```text
+// // pomelo/lib/server/server.js
+var doHandle = function(server, msg, session, routeRecord, cb) {
+  var originMsg = msg;
+  msg = msg.body || {};
+  msg.__route__ = originMsg.route;
+
+  var self = server;
+
+  var handle = function(err, resp, opts) {
+    if(err) {
+      // error from before filter
+      handleError(false, self, err, msg, session, resp, opts, function(err, resp, opts) {
+        response(false, self, err, msg, session, resp, opts, cb);
+      });
+      return;
+    }
+
+    self.handlerService.handle(routeRecord, msg, session, function(err, resp, opts) {
+      if(err) {
+        //error from handler
+        handleError(false, self, err, msg, session, resp, opts, function(err, resp, opts) {
+          response(false, self, err, msg, session, resp, opts, cb);
+        });
+        return;
+      }
+
+      response(false, self, err, msg, session, resp, opts, cb);
+    });
+  };  //end of handle
+
+  beforeFilter(false, server, msg, session, handle);
+};
+```
+
 最后调用:
 
 ```text

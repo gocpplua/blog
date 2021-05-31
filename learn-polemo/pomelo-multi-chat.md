@@ -68,9 +68,7 @@ ChatRemote.prototype.add = function(uid, sid, name, flag, cb) {　// flag = true
 	channel.pushMessage(param);
 
 	if( !! channel) {
-		channel.add(uid, sid);
-	}
-
+		channel.add(uid, sid);  // 将
 	cb(this.get(name, flag));
 };
 ```
@@ -78,6 +76,7 @@ ChatRemote.prototype.add = function(uid, sid, name, flag, cb) {　// flag = true
 我们首先会尝试获取channel：
 
 ```text
+// omelo/lib/common/service/channelService.js
 /**
  * Get channel by name.
  *
@@ -99,6 +98,7 @@ ChannelService.prototype.getChannel = function(name, create) {// create = true
 到获取就返回channel，获取不到就创建一个。
 
 ```text
+// pomelo/lib/common/service/channelService.js
 var addToStore = function(self, key, value) {
   if(!!self.store) {
     self.store.add(key, value, function(err) {
@@ -159,6 +159,21 @@ sendMessageByGroup实现如下:
  */
 var sendMessageByGroup = function(channelService, route, msg, groups, opts, cb) {
   ...
+    var rpcCB = function(serverId) {
+    return function(err, fails) {
+      if(err) {
+        logger.error('[pushMessage] fail to dispatch msg to serverId: ' + serverId + ', err:' + err.stack);
+        latch.done();
+        return;
+      }
+      if(fails) {
+        failIds = failIds.concat(fails);
+      }
+      successFlag = true;
+      latch.done();
+    };
+  };
+  ...
   var sendMessage = function(sid) {
     return (function() {
       if(sid === app.serverId) {
@@ -182,6 +197,8 @@ var sendMessageByGroup = function(channelService, route, msg, groups, opts, cb) 
   }
 };
 ```
+
+注意上面代码的rpcCB函数，在发送消息以后，就会进入rpcCB。
 
 [https://itbilu.com/nodejs/npm/EknY6k0FX.html\#source](https://itbilu.com/nodejs/npm/EknY6k0FX.html#source)
 
