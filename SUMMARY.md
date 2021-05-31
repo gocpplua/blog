@@ -24,9 +24,9 @@
   * [Pomelo点击:Test Game Server 按钮后流程](learn-polemo/pomelo-dian-ji-test-game-server-an-niu-hou-liu-cheng.md)
   * [Pomelo　tcp 连接测试](learn-polemo/pomelotcp-lian-jie-ce-shi.md)
   * [【Pomelo】chat](learn-polemo/pomelo-chat.md)
+  * [【pomelo】multi chat](learn-polemo/pomelo-multi-chat.md)
   * [【Pomelo】tcp 连接建立和数据发送流程](learn-polemo/pomelotcp-lian-jie-jian-li-liu-cheng.md)
   * [Pomelo Heartbeat](learn-polemo/pomelo-heartbeat.md)
-  * [【pomelo】multi chat](learn-polemo/pomelo-multi-chat.md)
   * [【Pomelo】pomelo start 启动流程](learn-polemo/pomelo-fu-wu-qi-qi-dong-liu-cheng.md)
   * [【pomelo】adminServer.json的作用](learn-polemo/pomeloadminserver.json-de-zuo-yong.md)
   * [vscode debug pomelo](learn-polemo/vscode-debug-pomelo.md)
@@ -52,8 +52,4 @@
   * [下载MSDN离线文档](20190313-xia-zai-msdn-li-xian-wen-dang/xia-zai-msdn-li-xian-wen-dang.md)
 * [20190213《typecho加友情链接》](20190213typecho-jia-you-qing-lian-jie/README.md)
   * [typecho加友情链接](20190213typecho-jia-you-qing-lian-jie/typecho-jia-you-qing-lian-jie.md)
-
-## learn pinus
-
-* [【pinus】框架编译方法](learn-pinus/pinus-kuang-jia-bian-yi-fang-fa.md)
 
