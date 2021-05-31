@@ -68,8 +68,8 @@ ChatRemote.prototype.add = function(uid, sid, name, flag, cb) {　// flag = true
 	channel.pushMessage(param);
 
 	if( !! channel) {
-		channel.add(uid, sid);  // 将
-	cb(this.get(name, flag));
+		channel.add(uid, sid);  // 将玩家加channel
+		cb(this.get(name, flag));
 };
 ```
 
