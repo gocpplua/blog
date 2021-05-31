@@ -253,9 +253,54 @@ var doHandle = function(server, msg, session, routeRecord, cb) {
 };
 ```
 
-[https://itbilu.com/nodejs/npm/EknY6k0FX.html\#source](https://itbilu.com/nodejs/npm/EknY6k0FX.html#source)
+关于通知其他客户端:
 
-[https://www.cnblogs.com/zhongweiv/p/nodejs\_pomelo.html](https://www.cnblogs.com/zhongweiv/p/nodejs_pomelo.html)
+```text
+// pomelo/lib/common/remote/frontend/channelRemote.js
+/**
+ * Push message to client by uids.
+ *
+ * @param  {String}   route route string of message
+ * @param  {Object}   msg   message
+ * @param  {Array}    uids  user ids that would receive the message
+ * @param  {Object}   opts  push options
+ * @param  {Function} cb    callback function
+ */
+Remote.prototype.pushMessage = function(route, msg, uids, opts, cb) {
+  if(!msg){
+    logger.error('Can not send empty message! route : %j, compressed msg : %j',
+        route, msg);
+    utils.invokeCallback(cb, new Error('can not send empty message.'));
+    return;
+  }
+  
+  var connector = this.app.components.__connector__;
+
+  var sessionService = this.app.get('sessionService');
+  var fails = [], sids = [], sessions, j, k;
+  for(var i=0, l=uids.length; i<l; i++) {
+    sessions = sessionService.getByUid(uids[i]);
+    if(!sessions) {
+      fails.push(uids[i]);
+    } else {
+      for(j=0, k=sessions.length; j<k; j++) {
+        sids.push(sessions[j].id);
+      }
+    }
+  }
+  logger.debug('[%s] pushMessage uids: %j, msg: %j, sids: %j', this.app.serverId, uids, msg, sids);
+  connector.send(null, route, msg, sids, opts, function(err) {
+    utils.invokeCallback(cb, err, fails);
+  });
+};
+
+```
+
+Good Job!!!
+
+参考文章:
+
+[https://itbilu.com/nodejs/npm/EknY6k0FX.html\#source](https://itbilu.com/nodejs/npm/EknY6k0FX.html#source)
 
 [https://blog.csdn.net/fjslovejhl/article/details/11703651](https://blog.csdn.net/fjslovejhl/article/details/11703651)
 
