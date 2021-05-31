@@ -200,6 +200,59 @@ var sendMessageByGroup = function(channelService, route, msg, groups, opts, cb) 
 
 注意上面代码的rpcCB函数，在发送消息以后，就会进入rpcCB。
 
+关于rpc内部如何进行我们就不管了，最后回到next调用:
+
+```text
+// chatofpomelo-websocket/game-server/app/servers/connector/handler/entryHandler.js
+handler.enter = function(msg, session, next) {
+	...
+
+	//put user into channel
+	self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users){
+		next(null, {
+			users:users
+		});
+	});
+};
+```
+
+然后respond给客户端:
+
+```text
+// pomelo/lib/server/server.js
+var doHandle = function(server, msg, session, routeRecord, cb) {
+  var originMsg = msg;
+  msg = msg.body || {};
+  msg.__route__ = originMsg.route;
+
+  var self = server;
+
+  var handle = function(err, resp, opts) {
+    if(err) {
+      // error from before filter
+      handleError(false, self, err, msg, session, resp, opts, function(err, resp, opts) {
+        response(false, self, err, msg, session, resp, opts, cb);
+      });
+      return;
+    }
+
+    self.handlerService.handle(routeRecord, msg, session, function(err, resp, opts) {
+      if(err) {
+        //error from handler
+        handleError(false, self, err, msg, session, resp, opts, function(err, resp, opts) {
+          response(false, self, err, msg, session, resp, opts, cb);
+        });
+        return;
+      }
+
+      response(false, self, err, msg, session, resp, opts, cb);
+    });
+  };  //end of handle
+
+  beforeFilter(false, server, msg, session, handle);
+};
+```
+
 [https://itbilu.com/nodejs/npm/EknY6k0FX.html\#source](https://itbilu.com/nodejs/npm/EknY6k0FX.html#source)
 
 [https://www.cnblogs.com/zhongweiv/p/nodejs\_pomelo.html](https://www.cnblogs.com/zhongweiv/p/nodejs_pomelo.html)
