@@ -143,6 +143,46 @@ Channel.prototype.pushMessage = function(route, msg, opts, cb) {
 };
 ```
 
+sendMessageByGroup实现如下:
+
+```text
+/**
+ * push message by group
+ *
+ * @param route {String} route route message
+ * @param msg {Object} message that would be sent to client
+ * @param groups {Object} grouped uids, , key: sid, value: [uid]
+ * @param opts {Object} push options
+ * @param cb {Function} cb(err)
+ *
+ * @api private
+ */
+var sendMessageByGroup = function(channelService, route, msg, groups, opts, cb) {
+  ...
+  var sendMessage = function(sid) {
+    return (function() {
+      if(sid === app.serverId) {
+        channelService.channelRemote[method](route, msg, groups[sid], opts, rpcCB(sid));
+      } else {
+        app.rpcInvoke(sid, {namespace: namespace, service: service,
+          method: method, args: [route, msg, groups[sid], opts]}, rpcCB(sid));
+      }
+    })();
+  };
+
+  var group;
+  for(var sid in groups) {
+    group = groups[sid];  // 查找对应的group，然后发送消息
+    if(group && group.length > 0) {
+      sendMessage(sid);
+    } else {
+      // empty group
+      process.nextTick(rpcCB(sid));
+    }
+  }
+};
+```
+
 [https://itbilu.com/nodejs/npm/EknY6k0FX.html\#source](https://itbilu.com/nodejs/npm/EknY6k0FX.html#source)
 
 [https://www.cnblogs.com/zhongweiv/p/nodejs\_pomelo.html](https://www.cnblogs.com/zhongweiv/p/nodejs_pomelo.html)
