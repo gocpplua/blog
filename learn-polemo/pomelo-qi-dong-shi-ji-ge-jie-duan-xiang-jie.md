@@ -112,6 +112,10 @@ this.state = STATE_STOPED;
 
 pomelo\lib\modules\console.js中Module.prototype.monitorHandler，msg.signal为`'stop'`和`'restart'`。 其他的就自己找一下吧。
 
+
+
+#### 六：子进程创建
+
 上面是master服务器的启动流程，那么对于其他服务，其他服务器是在什么时候启动的呢？ 我们先说下app.type的设置，这个在后面有用。 我们在`Application.init`中，调用`appUtil.defaultConfiguration`,然后在`appUtil.processArgs`中设置`app.type = Constants.RESERVED.ALL;`:
 
 ```text
