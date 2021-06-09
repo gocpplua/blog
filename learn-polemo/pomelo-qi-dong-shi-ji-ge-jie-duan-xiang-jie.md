@@ -1,4 +1,4 @@
-# 【pomelo】启动时几个阶段详解
+# 【pomelo】master服务和connector等服务的创建流程
 
 pomelo总体流程是下述四个阶段:
 
@@ -112,6 +112,210 @@ this.state = STATE_STOPED;
 
 pomelo\lib\modules\console.js中Module.prototype.monitorHandler，msg.signal为`'stop'`和`'restart'`。 其他的就自己找一下吧。
 
+上面是master服务器的启动流程，那么对于其他服务，其他服务器是在什么时候启动的呢？ 我们先说下app.type的设置，这个在后面有用。 我们在`Application.init`中，调用`appUtil.defaultConfiguration`,然后在`appUtil.processArgs`中设置`app.type = Constants.RESERVED.ALL;`:
+
+```text
+var processArgs = function(app, args) {
+...
+  var type = args.type || Constants.RESERVED.ALL;
+  var startId = args.startId;
+
+  app.set(Constants.RESERVED.MAIN, args.main, true);
+  app.set(Constants.RESERVED.SERVER_TYPE, serverType, true);
+  app.set(Constants.RESERVED.SERVER_ID, serverId, true);
+  app.set(Constants.RESERVED.MODE, mode, true);
+  app.set(Constants.RESERVED.TYPE, type, true);
+...
+};
+```
+
+回到主流程中，我们会调用各个组件的start函数，当我们在调用`master`组件时候:
+
+```text
+// pomelo\lib\components\master.js
+pro.start = function (cb) {
+  this.master.start(cb);
+};
+```
+
+上面的`this.master.start`,实际上是在调用:
+
+```text
+// Epomelo\lib\master\master.js
+Server.prototype.start = function(cb) {
+  moduleUtil.registerDefaultModules(true, this.app, this.closeWatcher);
+  moduleUtil.loadModules(this, this.masterConsole);
+
+  var self = this;
+  // start master console
+  this.masterConsole.start(function(err) {
+   // 其实是:node_modules\pomelo-admin\lib\consoleService.js
+    if(err) {
+      process.exit(0);
+    }
+    moduleUtil.startModules(self.modules, function(err) {
+    // 经过几次回调以后，会进入这里！！！！
+      if(err) {
+        utils.invokeCallback(cb, err);
+        return;
+      }
+
+      if(self.app.get(Constants.RESERVED.MODE) !== Constants.RESERVED.STAND_ALONE) {
+        starter.runServers(self.app);
+      }
+      utils.invokeCallback(cb);
+    });
+  });
+
+....
+};
+```
+
+上面的start函数，最后会进入到`moduleUtil.startModules`的回调:
+
+```text
+ if(err) {
+        utils.invokeCallback(cb, err);
+        return;
+      }
+
+      if(self.app.get(Constants.RESERVED.MODE) !== Constants.RESERVED.STAND_ALONE) {
+        starter.runServers(self.app);
+      }
+      utils.invokeCallback(cb);
+```
+
+由于不是独立模式，会进入:`starter.runServers(self.app);`。
+
+```text
+// pomelo\lib\master\starter.js
+/**
+ * Run all servers
+ *
+ * @param {Object} app current application  context
+ * @return {Void}
+ */
+ starter.runServers = function(app) {
+  console.trace("runServer")
+  var server, servers;
+  var condition = app.startId || app.type;
+  switch(condition) {
+    case Constants.RESERVED.MASTER:
+    break;
+    case Constants.RESERVED.ALL:
+    servers = app.getServersFromConfig();
+    for (var serverId in servers) {
+      this.run(app, servers[serverId]);
+    }
+    break;
+    default:
+    server = app.getServerFromConfig(condition);
+    if(!!server) {
+      this.run(app, server);
+    } else {
+      servers = app.get(Constants.RESERVED.SERVERS)[condition];
+      for(var i=0; i<servers.length; i++) {
+        this.run(app, servers[i]);
+      }
+    }
+  }
+};
+```
+
+这里我们的`condition`实际上就是`Constants.RESERVED.ALL`,就会执行:
+
+```text
+// pomelo\lib\master\starter.js
+    servers = app.getServersFromConfig();
+    for (var serverId in servers) {
+      this.run(app, servers[serverId]);
+    }
+```
+
+上面就是获取servers.json中的配置，然后依次运行，我们看下`run`函数:
+
+```text
+// pomelo\lib\master\starter.js
+/**
+ * Run server
+ *
+ * @param {Object} app current application context
+ * @param {Object} server
+ * @return {Void}
+ */
+starter.run = function(app, server, cb) {
+  console.log(`run ${process.pid} `)
+  env = app.get(Constants.RESERVED.ENV);
+  var cmd, key;
+  if (utils.isLocal(server.host)) {
+...
+    starter.localrun(process.execPath, null, options, cb);
+  } else {
+...
+    starter.sshrun(cmd, server.host, cb);
+  }
+};
+```
+
+上面根据host，区分是不是本机地址，调用不同的接口:`starter.localrun`和`starter.sshr.n`。这两个函数，最后都会调用`starter.spawnProcess`:
+
+```text
+/**
+ * Fork child process to run command.
+ *
+ * @param {String} command
+ * @param {Object} options
+ * @param {Callback} callback
+ *
+ */
+var spawnProcess = function(command, host, options, cb) {
+  console.trace("spawnProcess", command, options)
+  var child = null;
+
+  if(env === Constants.RESERVED.ENV_DEV) {
+    child = cp.spawn(command, options);
+    ...
+  } else {
+    child = cp.spawn(command, options, {detached: true, stdio: 'inherit'});
+    console.log(`spawnProcess3 ${process.pid} `, command, options)
+    child.unref();
+  }
+
+ ...
+};
+```
+
+上面最后就是调用nodejs的child\_process模块的spawn函数,创建新进程:
+
+```text
+var cp = require('child_process');
+cp.spawn(command, options,...)
+```
+
+我调试了下，得到`command` 和 `option`参数：
+
+```text
+command:'D:\\Program Files\\nodejs\\node.exe'
+option:
+[
+  "e:\\3rdparty\\pomelo_proj\\HelloWorld\\game-server\\app.js",
+  "env=development",
+  "id=connector-server-1",
+  "host=127.0.0.1",
+  "port=3150",
+  "clientHost=127.0.0.1",
+  "clientPort=3010",
+  "frontend=true",
+  "serverType=connector",
+]
+```
+
+从中我们可以看出，其实有执行了一次app.js，只是现在的参数不一样了，例如:`serverType`。
+
+以上就是master进程和子进程的创建流程。
+
+
+
 ### 附录：
 
 下面是npm-lifecycle相关的各个阶段
@@ -178,35 +382,66 @@ var loadLifecycle = function(app) {
 
 上面就是 master 服务器对应的 lifecycle.js 路径。不过没这个文件。所有我们的pomelo程序一直都是执行startUp。
 
-我后来在自己电脑上全局搜索了下，在node源码路径找到：
 
-> node-v14.16.1\deps\npm\lib\utils\lifecycle.js
->
-> \`\`\` exports = module.exports = runLifecycle
 
-const lifecycleOpts = require\('../config/lifecycle'\) const lifecycle = require\('npm-lifecycle'\)
-
-function runLifecycle \(pkg, stage, wd, moreOpts, cb\) { if \(typeof moreOpts === 'function'\) { cb = moreOpts moreOpts = null }
-
-const opts = lifecycleOpts\(moreOpts\) lifecycle\(pkg, stage, wd, opts\).then\(cb, cb\) }
+我后来在自己电脑上全局搜索了下，在node源码路径找到：node-v14.16.1\deps\npm\lib\utils\lifecycle.js
 
 ```text
-查看上面 lifecycleOpts 对应的文件:
+exports = module.exports = runLifecycle
+
+const lifecycleOpts = require('../config/lifecycle')
+const lifecycle = require('npm-lifecycle')
+
+function runLifecycle (pkg, stage, wd, moreOpts, cb) {
+  if (typeof moreOpts === 'function') {
+    cb = moreOpts
+    moreOpts = null
+  }
+
+  const opts = lifecycleOpts(moreOpts)
+  lifecycle(pkg, stage, wd, opts).then(cb, cb)
+}
 ```
 
+查看上面 lifecycleOpts 对应的文件:
+
+```text
 'use strict'
 
-const npm = require\('../npm.js'\) const log = require\('npmlog'\)
+const npm = require('../npm.js')
+const log = require('npmlog')
 
 module.exports = lifecycleOpts
 
 let opts
 
-function lifecycleOpts \(moreOpts\) { if \(!opts\) { opts = { config: npm.config.snapshot, dir: npm.dir, failOk: false, force: npm.config.get\('force'\), group: npm.config.get\('group'\), ignorePrepublish: npm.config.get\('ignore-prepublish'\), ignoreScripts: npm.config.get\('ignore-scripts'\), log: log, nodeOptions: npm.config.get\('node-options'\), production: npm.config.get\('production'\), scriptShell: npm.config.get\('script-shell'\), scriptsPrependNodePath: npm.config.get\('scripts-prepend-node-path'\), unsafePerm: npm.config.get\('unsafe-perm'\), user: npm.config.get\('user'\) } }
+function lifecycleOpts (moreOpts) {
+  if (!opts) {
+    opts = {
+      config: npm.config.snapshot,
+      dir: npm.dir,
+      failOk: false,
+      force: npm.config.get('force'),
+      group: npm.config.get('group'),
+      ignorePrepublish: npm.config.get('ignore-prepublish'),
+      ignoreScripts: npm.config.get('ignore-scripts'),
+      log: log,
+      nodeOptions: npm.config.get('node-options'),
+      production: npm.config.get('production'),
+      scriptShell: npm.config.get('script-shell'),
+      scriptsPrependNodePath: npm.config.get('scripts-prepend-node-path'),
+      unsafePerm: npm.config.get('unsafe-perm'),
+      user: npm.config.get('user')
+    }
+  }
 
-return moreOpts ? Object.assign\({}, opts, moreOpts\) : opts }
+  return moreOpts ? Object.assign({}, opts, moreOpts) : opts
+}
+```
 
-\`\`\` 想要了解 npm 中的npm-lifecycle，请戳[链接](https://github.com/npm/npm-lifecycle)
+想要了解 npm 中的npm-lifecycle，请戳[链接](https://github.com/npm/npm-lifecycle)
 
 接下来我们回到: Application.start，进入到appUtil.startByType的匿名回调函数，进入到插件的start阶段。
+
+
 
