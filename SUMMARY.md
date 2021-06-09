@@ -28,6 +28,7 @@
   * [【Pomelo】tcp 连接建立和数据发送流程](learn-polemo/pomelotcp-lian-jie-jian-li-liu-cheng.md)
   * [Pomelo Heartbeat](learn-polemo/pomelo-heartbeat.md)
   * [【Pomelo】pomelo start 启动流程](learn-polemo/pomelo-fu-wu-qi-qi-dong-liu-cheng.md)
+  * [【pomelo】启动时几个阶段详解](learn-polemo/pomelo-qi-dong-shi-ji-ge-jie-duan-xiang-jie.md)
   * [【pomelo】adminServer.json的作用](learn-polemo/pomeloadminserver.json-de-zuo-yong.md)
   * [vscode debug pomelo](learn-polemo/vscode-debug-pomelo.md)
   * [【pomelo】components组件加载原理](learn-polemo/pomelocomponents-zu-jian-jia-zai-yuan-li.md)
